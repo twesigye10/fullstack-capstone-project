@@ -42,12 +42,44 @@ body::before {
 
 /* Task 4: Add styles for headings, paragraphs, and buttons */
 h1,
-h2,
-.lead,
-.btn-primary {
+h2 {
   /* insert code here */
   font-size: 4rem;
   color: #333;
   margin-bottom: 0.5em;
   font-weight: 700;
+}
+
+.lead {
+  font-size: 1.5rem;
+  color: #333;
+  margin-bottom: 2rem;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+.btn-primary {
+  background-color: #1e90ff;
+  color: #ffffff;
+  border: none;
+  padding: 1rem 2.5rem;
+  border-radius: 30px;
+  font-size: 1.2rem;
+  font-weight: 700;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s, transform 0.1s;
+}
+.btn-primary:hover,
+.btn-primary:focus {
+  background-color: #f50057;
+  transform: scale(1.05);
+}
+@media (max-width: 768px) {
+  h1 {
+    font-size: 3rem;
+  }
+  h2 {
+    font-size: 2.5rem;
+  }
+  .lead {
+    font-size: 1.25rem;
+  }
 }
