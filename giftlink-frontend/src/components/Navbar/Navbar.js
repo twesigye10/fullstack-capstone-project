@@ -1,4 +1,6 @@
 import React from "react";
+import { Link } from "react-router-dom";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 export default function Navbar() {
   return (
@@ -21,6 +23,11 @@ export default function Navbar() {
               Gifts
             </a>{" "}
             {/* Updated Link */}
+          </li>
+          <li className="nav-item">
+            <Link className="nav-link" to="/app/search">
+              Search
+            </Link>
           </li>
         </ul>
       </div>
