@@ -8,6 +8,7 @@ const connectToDatabase = require("../models/db");
 const router = express.Router();
 const dotenv = require("dotenv");
 const pino = require("pino"); // Import Pino logger
+const { body, validationResult } = require("express-validator");
 
 //Step 1 - Task 3: Create a Pino logger instance
 const logger = pino(); // Create a Pino logger instance
@@ -96,6 +97,53 @@ router.post("/login", async (req, res) => {
     return res
       .status(500)
       .json({ error: "Internal server error", details: e.message });
+  }
+});
+
+router.post("/update", async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    logger.error("Validation errors in update request", errors.array());
+    return res.status(400).json({ errors: errors.array() });
+  }
+
+  try {
+    const email = req.headers.email;
+    if (!email) {
+      logger.error("Email not found in the request headers");
+      return res
+        .status(400)
+        .json({ error: "Email not found in the request headers" });
+    }
+    //Task 4: Connect to MongoDB
+    const db = await connectToDatabase();
+    const collection = db.collection("users");
+    //Task 5: Find user credentials
+    const existingUser = await collection.findOne({ email });
+    if (!existingUser) {
+      logger.error("User not found");
+      return res.status(404).json({ error: "User not found" });
+    }
+    existingUser.firstName = req.body.name;
+    existingUser.updatedAt = new Date();
+    //Task 6: Update user credentials in DB
+    const updatedUser = await collection.findOneAndUpdate(
+      { email },
+      { $set: existingUser },
+      { returnDocument: "after" }
+    );
+    //Task 7: Create JWT authentication with user._id as payload using secret key from .env file
+    const payload = {
+      user: {
+        id: updatedUser._id.toString(),
+      },
+    };
+    const authtoken = jwt.sign(payload, JWT_SECRET);
+    logger.info("User updated successfully");
+    res.json({ authtoken });
+  } catch (e) {
+    logger.error(e);
+    return res.status(500).send("Internal Server Error");
   }
 });
 
