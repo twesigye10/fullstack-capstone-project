@@ -1,15 +1,60 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./LoginPage.css";
+import { urlConfig } from "../../config";
+import { useAppContext } from "../../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 function LoginPage() {
   //insert code here to create useState hook variables for email, password
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [incorrect, setIncorrect] = useState("");
+  const navigate = useNavigate();
+  const bearerToken = sessionStorage.getItem("bearer-token");
+  const { setIsLoggedIn } = useAppContext();
+
+  useEffect(() => {
+    if (sessionStorage.getItem("auth-token")) {
+      navigate("/app");
+    }
+  }, [navigate]);
   // insert code here to create handleLogin function and include console.log
   const handleLogin = async (e) => {
     e.preventDefault();
-    console.log("Email:", email);
-    console.log("Password:", password);
+
+    const response = await fetch(`${urlConfig.backendUrl}/api/auth/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: bearerToken ? `Bearer ${bearerToken}` : "", // Include Bearer token if available
+      },
+      body: JSON.stringify({
+        email,
+        password,
+      }),
+    });
+
+    //Step 2: Task 1
+    const json = await response.json();
+    console.log("Json", json);
+    if (json.authtoken) {
+      //Step 2: Task 2
+      sessionStorage.setItem("auth-token", json.authtoken);
+      sessionStorage.setItem("name", json.userName);
+      sessionStorage.setItem("email", json.userEmail);
+      //Step 2: Task 3
+      setIsLoggedIn(true);
+      //Step 2: Task 4
+      navigate("/app");
+    } else {
+      //Step 2: Task 5
+      document.getElementById("email").value = "";
+      document.getElementById("password").value = "";
+      setIncorrect("Wrong password. Try again.");
+      setTimeout(() => {
+        setIncorrect("");
+      }, 2000);
+    }
   };
   return (
     <div className="container mt-5">
@@ -28,7 +73,10 @@ function LoginPage() {
                 className="form-control"
                 placeholder="Enter your email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  setIncorrect("");
+                }}
               />
             </div>
             <div className="mb-3">
@@ -41,8 +89,22 @@ function LoginPage() {
                 className="form-control"
                 placeholder="Enter your password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  setIncorrect("");
+                }}
               />
+              <span
+                style={{
+                  color: "red",
+                  height: ".5cm",
+                  display: "block",
+                  fontStyle: "italic",
+                  fontSize: "12px",
+                }}
+              >
+                {incorrect}
+              </span>
             </div>
 
             {/* insert code here to create a button that performs the `handleLogin` function on click */}
