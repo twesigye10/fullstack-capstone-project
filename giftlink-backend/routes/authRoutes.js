@@ -100,7 +100,7 @@ router.post("/login", async (req, res) => {
   }
 });
 
-router.post("/update", async (req, res) => {
+router.put("/update", async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     logger.error("Validation errors in update request", errors.array());
