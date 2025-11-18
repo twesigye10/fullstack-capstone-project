@@ -26,10 +26,10 @@ function RegisterPage() {
             "Content-Type": "application/json",
           }, //Task 7: Set headers
           body: JSON.stringify({
-            firstName,
-            lastName,
-            email,
-            password,
+            firstName: firstName,
+            lastName: lastName,
+            email: email,
+            password: password,
           }), //Task 8: Set body to send user details
         }
       );

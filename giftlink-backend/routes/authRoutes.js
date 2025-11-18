@@ -26,6 +26,10 @@ router.post("/register", async (req, res) => {
     const collection = db.collection("users");
     //Task 3: Check for existing email
     const existingEmail = await collection.findOne({ email: req.body.email });
+    if (existingEmail) {
+      logger.error("Email id already exists");
+      return res.status(400).json({ error: "Email id already exists" });
+    }
     const salt = await bcryptjs.genSalt(10);
     const hash = await bcryptjs.hash(req.body.password, salt);
     const email = req.body.email;
@@ -55,6 +59,7 @@ router.post("/register", async (req, res) => {
 });
 
 router.post("/login", async (req, res) => {
+  console.log("\n\n Inside login");
   try {
     // Task 1: Connect to `giftsdb` in MongoDB through `connectToDatabase` in `db.js`.
     const db = await connectToDatabase();

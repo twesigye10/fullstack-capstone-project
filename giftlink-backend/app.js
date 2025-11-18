@@ -6,15 +6,10 @@ const pinoLogger = require("./logger");
 
 const connectToDatabase = require("./models/db");
 const { loadData } = require("./util/import-mongo/index");
-// Import auth routes
-const authRoutes = require("./routes/authRoutes");
 
 const app = express();
 app.use("*", cors());
 const port = 3060;
-
-// use auth routes
-app.use("/api/auth", authRoutes);
 
 // Connect to MongoDB; we just do this one time
 connectToDatabase()
@@ -26,6 +21,9 @@ connectToDatabase()
 app.use(express.json());
 
 // Route files
+// Import auth routes
+const authRoutes = require("./routes/authRoutes");
+
 // Gift API Task 1: import the giftRoutes and store in a constant called giftroutes
 const giftRoutes = require("./routes/giftRoutes");
 
@@ -38,6 +36,9 @@ const logger = require("./logger");
 app.use(pinoHttp({ logger }));
 
 // Use Routes
+// use auth routes
+app.use("/api/auth", authRoutes);
+
 // Gift API Task 2: add the giftRoutes to the server by using the app.use() method.
 app.use("/api/gifts", giftRoutes);
 

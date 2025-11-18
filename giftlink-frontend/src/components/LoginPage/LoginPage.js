@@ -29,8 +29,8 @@ function LoginPage() {
         Authorization: bearerToken ? `Bearer ${bearerToken}` : "", // Include Bearer token if available
       },
       body: JSON.stringify({
-        email,
-        password,
+        email: email,
+        password: password,
       }),
     });
 
