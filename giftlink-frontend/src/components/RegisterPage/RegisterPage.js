@@ -15,7 +15,8 @@ function RegisterPage() {
   const navigate = useNavigate();
   const { setIsLoggedIn } = useAppContext();
 
-  const handleRegister = async () => {
+  const handleRegister = async (e) => {
+    e.preventDefault();
     try {
       const response = await fetch(
         `${urlConfig.backendUrl}/api/auth/register`,
@@ -47,8 +48,8 @@ function RegisterPage() {
           setShowerr(json.error);
         }
       }
-    } catch (e) {
-      console.log("Error fetching details: " + e.message);
+    } catch (error) {
+      console.log("Error fetching details: " + error.message);
     }
   };
 

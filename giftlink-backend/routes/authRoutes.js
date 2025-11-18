@@ -90,7 +90,7 @@ router.post("/login", async (req, res) => {
       const authtoken = jwt.sign(payload, JWT_SECRET);
       // Log the successful login
       logger.info("User logged in successfully");
-      res.json({ authtoken, email });
+      res.json({ authtoken, userName, userEmail });
     } else {
       // Task 7: Send appropriate message if user not found
       logger.error("User not found");
