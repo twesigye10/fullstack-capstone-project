@@ -35,6 +35,13 @@ function RegisterPage() {
         }
       );
 
+      // If the backend returned
+      if (!response.ok) {
+        const err = await response.json();
+        setShowerr(err.message || "Registration failed");
+        return;
+      }
+
       const json = await response.json();
       if (json.authtoken) {
         sessionStorage.setItem("auth-token", json.authtoken);
